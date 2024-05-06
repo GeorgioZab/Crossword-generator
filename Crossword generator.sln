@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crossword generator", "Crossword generator\Crossword generator.csproj", "{28F5156B-B874-43C1-B4EE-DDF75317C5A8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{28F5156B-B874-43C1-B4EE-DDF75317C5A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28F5156B-B874-43C1-B4EE-DDF75317C5A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28F5156B-B874-43C1-B4EE-DDF75317C5A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28F5156B-B874-43C1-B4EE-DDF75317C5A8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DBB1F3AE-5D13-4A29-8A3E-41EC5628B632}
+	EndGlobalSection
+EndGlobal
