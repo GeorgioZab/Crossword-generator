@@ -28,13 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openPuzzleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.board = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -57,6 +56,7 @@
             this.Column19 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column20 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column21 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.HlpButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.board)).BeginInit();
             this.SuspendLayout();
@@ -97,18 +97,10 @@
             // 
             // helpToolStripMenuItem
             // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
-            this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
+            this.helpToolStripMenuItem.Text = "About creators";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
             // 
             // board
             // 
@@ -140,15 +132,15 @@
             this.Column19,
             this.Column20,
             this.Column21});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(1);
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.board.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.board.DefaultCellStyle = dataGridViewCellStyle3;
             this.board.Dock = System.Windows.Forms.DockStyle.Fill;
             this.board.GridColor = System.Drawing.SystemColors.ButtonHighlight;
             this.board.Location = new System.Drawing.Point(0, 24);
@@ -157,8 +149,6 @@
             this.board.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.board.Size = new System.Drawing.Size(619, 506);
             this.board.TabIndex = 1;
-            this.board.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.board_CellPainting);
-            this.board.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.board_CellValueChanged);
             this.board.LocationChanged += new System.EventHandler(this.Form1_LocationChanged);
             // 
             // Column1
@@ -287,13 +277,26 @@
             this.Column21.Name = "Column21";
             this.Column21.ReadOnly = true;
             // 
+            // HlpButton
+            // 
+            this.HlpButton.Location = new System.Drawing.Point(477, 39);
+            this.HlpButton.Name = "HlpButton";
+            this.HlpButton.Size = new System.Drawing.Size(130, 49);
+            this.HlpButton.TabIndex = 2;
+            this.HlpButton.Text = "User\'s guide";
+            this.HlpButton.UseVisualStyleBackColor = true;
+            this.HlpButton.Click += new System.EventHandler(this.HlpButton_Click_1);
+            this.HlpButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(619, 530);
+            this.Controls.Add(this.HlpButton);
             this.Controls.Add(this.board);
             this.Controls.Add(this.menuStrip1);
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "Form1";
@@ -302,6 +305,7 @@
             this.Text = "Crossword Puzzle";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.LocationChanged += new System.EventHandler(this.Form1_LocationChanged);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.board)).EndInit();
@@ -317,7 +321,6 @@
         private System.Windows.Forms.ToolStripMenuItem openPuzzleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.DataGridView board;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
@@ -340,6 +343,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column19;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column20;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column21;
+        private System.Windows.Forms.Button HlpButton;
     }
 }
 

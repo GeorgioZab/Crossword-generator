@@ -83,6 +83,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = " Clues";
+            this.Load += new System.EventHandler(this.Clues_Load);
             ((System.ComponentModel.ISupportInitialize)(this.clue_table)).EndInit();
             this.ResumeLayout(false);
 

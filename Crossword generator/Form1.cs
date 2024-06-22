@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace Crossword_generator
 {
@@ -15,11 +11,17 @@ namespace Crossword_generator
     {
         Clues clue_window = new Clues();
         List<id_cells> idc = new List<id_cells>();
-        public String puzzle_file = Application.StartupPath + "\\Puzzles\\puzzle_1.pzl";
+        Random rnd = new Random();
+        String puzzle_file;
+        public String link_1 = Application.StartupPath + "\\Вспомогательные ссылки\\Руководство пользователя.chm";
+        public String link_2 = Application.StartupPath + "\\Вспомогательные ссылки\\Справочная служба.chm";
 
         public Form1()
         {
+            puzzle_file = Application.StartupPath + $"\\Puzzles\\puzzle_1.pzl";
+
             InitializeComponent();
+
             BuildWordList();
         }
 
@@ -30,22 +32,23 @@ namespace Crossword_generator
 
         private void BuildWordList()
         {
-            String line = "";
-            using (StreamReader s = new StreamReader(puzzle_file))
+            if (File.Exists(puzzle_file))
             {
-                line = s.ReadLine();
-                while((line = s.ReadLine()) != null)
+                String line = "";
+                using (StreamReader s = new StreamReader(puzzle_file))
                 {
-                    String[] l = line.Split('|');
-                    idc.Add(new id_cells(Int32.Parse(l[0]), Int32.Parse(l[1]), l[2], l[3], l[4], l[5]));
-                    clue_window.clue_table.Rows.Add(new String[] { l[3], l[2], l[5] });
+                    line = s.ReadLine();
+                    while ((line = s.ReadLine()) != null)
+                    {
+                        String[] l = line.Split('|');
+                        idc.Add(new id_cells(Int32.Parse(l[0]), Int32.Parse(l[1]), l[2], l[3], l[4], l[5]));
+                    }
                 }
             }
-        }
-
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Help About", "By Gosha and Almir");
+            else
+            {
+                MessageBox.Show("Файл пазла не найден: " + puzzle_file);
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -63,13 +66,13 @@ namespace Crossword_generator
             board.BackgroundColor = Color.Black;
             board.DefaultCellStyle.BackColor = Color.Black;
 
-            for (int i = 0; i < 21; i++) 
+            for (int i = 0; i < 21; i++)
             {
                 board.Rows.Add();
             }
 
-            foreach (DataGridViewColumn c in board.Columns) 
-            { 
+            foreach (DataGridViewColumn c in board.Columns)
+            {
                 c.Width = board.Width / board.Columns.Count;
             }
 
@@ -78,36 +81,193 @@ namespace Crossword_generator
                 r.Height = board.Height / board.Rows.Count;
             }
 
-            for (int row = 0; row < board.Rows.Count; row++)
+            GenerateCrosswordPuzzle();
+            board.CellValueChanged += board_CellValueChanged;
+        }
+
+        private void GenerateCrosswordPuzzle()
+        {
+            idc = idc.OrderBy(x => rnd.Next()).ToList();  // Shuffle the list
+            int wordNumber = 1;
+            id_cells firstWord = idc.First();
+            int startRow = board.Rows.Count / 2;
+            int startCol = board.Columns.Count / 2;
+            bool direction = true; // Default direction is horizontal
+            PlaceWord(startRow, startCol, firstWord.word, direction, wordNumber.ToString());
+            clue_window.clue_table.Rows.Add(new String[] { wordNumber.ToString(), "ГОРИЗОНТАЛЬНО", firstWord.clue });
+            wordNumber++;
+
+            List<id_cells> placedWords = new List<id_cells> { new id_cells(startCol, startRow, "ГОРИЗОНТАЛЬНО", wordNumber.ToString(), firstWord.word, firstWord.clue) };
+
+            foreach (id_cells i in idc.Skip(1))
             {
-                for(int col = 0; col < board.Columns.Count; col++)
-                    board[col, row].ReadOnly = true;
+                bool placed = false;
+
+                foreach (id_cells placedWord in placedWords)
+                {
+                    for (int j = 0; j < placedWord.word.Length; j++)
+                    {
+                        for (int k = 0; k < i.word.Length; k++)
+                        {
+                            if (placedWord.word[j] == i.word[k])
+                            {
+                                // Try to place vertically
+                                if (CanPlaceWord(placedWord.Y + j - k, placedWord.X, i.word.Length, false, i))
+                                {
+                                    PlaceWord(placedWord.Y + j - k, placedWord.X, i.word, false, wordNumber.ToString());
+                                    clue_window.clue_table.Rows.Add(new String[] { wordNumber.ToString(), "ВЕРТИКАЛЬНО", i.clue });
+                                    wordNumber++;
+                                    placedWords.Add(new id_cells(placedWord.X, placedWord.Y + j - k, "ВЕРТИКАЛЬНО", wordNumber.ToString(), i.word, i.clue));
+                                    placed = true;
+                                    break;
+                                }
+                                // Try to place horizontally
+                                else if (CanPlaceWord(placedWord.Y, placedWord.X + j - k, i.word.Length, true, i))
+                                {
+                                    PlaceWord(placedWord.Y, placedWord.X + j - k, i.word, true, wordNumber.ToString());
+                                    clue_window.clue_table.Rows.Add(new String[] { wordNumber.ToString(), "ГОРИЗОНТАЛЬНО", i.clue });
+                                    wordNumber++;
+                                    placedWords.Add(new id_cells(placedWord.X + j - k, placedWord.Y, "ГОРИЗОНТАЛЬНО", wordNumber.ToString(), i.word, i.clue));
+                                    placed = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (placed) break;
+                    }
+                    if (placed) break;
+                }
+                if (!placed)
+                {
+                    // Log message if word couldn't be placed
+                    Console.WriteLine($"Couldn't place word: {i.word}");
+                }
             }
 
-            foreach (id_cells i in idc)
-            {
-                int start_col = i.X;
-                int start_row = i.Y;
-                char[] word = i.word.ToCharArray();
+            // Очистка доски от лишних значений
+            ClearBoardContent();
+        }
 
-                for (int j = 0; j < word.Length; j++)
+        private void ClearBoardContent()
+        {
+            foreach (DataGridViewRow row in board.Rows)
+            {
+                foreach (DataGridViewCell cell in row.Cells)
                 {
-                    if (i.direction.ToUpper() == "ACROSS")
-                        FormatCell(start_row, start_col + j, word[j].ToString());
-                    if (i.direction.ToUpper() == "DOWN")
-                        FormatCell(start_row + j, start_col, word[j].ToString());
+                    if (cell.Style.BackColor == Color.White)
+                    {
+                        if (cell.Value != null && !int.TryParse(cell.Value.ToString(), out _))
+                        {
+                            cell.Value = null; // Clear the cell value if it's not a number
+                        }
+                    }
                 }
             }
         }
 
-        private void FormatCell(int row, int col, String letter)
+        private bool CanPlaceWord(int startRow, int startCol, int length, bool direction, id_cells word)
         {
-            DataGridViewCell c = board[col, row];
-            c.Style.BackColor = Color.White;
-            c.ReadOnly = false;
-            c.Style.SelectionBackColor = Color.Cyan;
-            c.Tag = letter;
+            for (int i = 0; i < length; i++)
+            {
+                int row = direction ? startRow : startRow + i;
+                int col = direction ? startCol + i : startCol;
+
+                if (row >= board.Rows.Count || col >= board.Columns.Count || row < 0 || col < 0)
+                {
+                    return false;
+                }
+
+                if (board[col, row].Style.BackColor != Color.Black && board[col, row].Tag != null && board[col, row].Tag.ToString() != word.word[i].ToString())
+                {
+                    return false;
+                }
+
+                // Additional check for word intersections
+                if (board[col, row].Tag != null && board[col, row].Tag.ToString() != word.word[i].ToString())
+                {
+                    return false;
+                }
+            }
+
+            // Ensure there is at least one empty cell before and after the word
+            if (direction)
+            {
+                if ((startCol > 0 && board[startCol - 1, startRow].Style.BackColor == Color.White) ||
+                    (startCol + length < board.Columns.Count && board[startCol + length, startRow].Style.BackColor == Color.White))
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if ((startRow > 0 && board[startCol, startRow - 1].Style.BackColor == Color.White) ||
+                    (startRow + length < board.Rows.Count && board[startCol, startRow + length].Style.BackColor == Color.White))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
+
+        private void PlaceWord(int startRow, int startCol, string word, bool direction, string number)
+        {
+            for (int i = 0; i < word.Length; i++)
+            {
+                int row = direction ? startRow : startRow + i;
+                int col = direction ? startCol + i : startCol;
+                FormatCell(row, col, word[i].ToString());
+            }
+
+            // Place word number
+            int numRow = direction ? startRow : startRow - 1;
+            int numCol = direction ? startCol - 1 : startCol;
+            if (numRow >= 0 && numCol >= 0 && numRow < board.Rows.Count && numCol < board.Columns.Count)
+            {
+                FormatCell(numRow, numCol, number); // FormatCell now handles placing numbers
+            }
+        }
+
+
+        private void FormatCell(int row, int col, string content)
+        {
+            DataGridViewCell cell = board[col, row];
+
+            // Check if the content is a number (indicating word number)
+            int number;
+            bool isNumber = int.TryParse(content, out number);
+
+            if (isNumber)
+            {
+                // Format for word number
+                cell.Style.BackColor = Color.White;
+                cell.ReadOnly = true;
+                cell.Style.SelectionBackColor = Color.White;
+                cell.Style.ForeColor = Color.Blue; // Set color for word number
+                cell.Value = content;
+            }
+            else if (content != null && content.Trim().Length > 0)
+            {
+                // Format for letter
+                cell.Style.BackColor = Color.White;
+                cell.ReadOnly = false;
+                cell.Style.SelectionBackColor = Color.Cyan;
+                cell.Style.ForeColor = Color.Black;
+                cell.Value = content.ToUpper(); // Ensure letters are uppercase
+                cell.Tag = content.ToUpper(); // Store the correct letter in Tag
+            }
+            else
+            {
+                // Clear empty cells
+                cell.Style.BackColor = Color.Black; // Set background to black
+                cell.ReadOnly = false; // Allow editing for empty cells
+                cell.Style.SelectionBackColor = Color.Cyan;
+                cell.Style.ForeColor = Color.Black;
+                cell.Value = null; // Clear cell value
+                cell.Tag = null; // Clear cell tag
+            }
+        }
+
 
         private void Form1_LocationChanged(object sender, EventArgs e)
         {
@@ -116,28 +276,55 @@ namespace Crossword_generator
 
         private void board_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            try 
+            if (board[e.ColumnIndex, e.RowIndex].Value != null)
             {
-                board[e.ColumnIndex, e.RowIndex].Value = board[e.ColumnIndex, e.RowIndex].Value.ToString().ToUpper();
-            }
-            catch { }
+                string inputLetter = board[e.ColumnIndex, e.RowIndex].Value.ToString().ToUpper(); // Convert input to uppercase
+                string correctLetter = board[e.ColumnIndex, e.RowIndex].Tag.ToString().ToUpper(); // Ensure correct letter is uppercase
 
-            try
-            {
-                if (board[e.ColumnIndex, e.RowIndex].Value.ToString().Length > 1)
-                    board[e.ColumnIndex, e.RowIndex].Value = board[e.ColumnIndex, e.RowIndex].Value.ToString().Substring(0, 1);
-            }
-            catch { }
-
-            try
-            {
-                if (board[e.ColumnIndex, e.RowIndex].Value.ToString().ToUpper() == board[e.ColumnIndex, e.RowIndex].Tag.ToString().ToUpper())
+                if (inputLetter == correctLetter)
+                {
                     board[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.DarkGreen;
+                }
                 else
+                {
                     board[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.Red;
+                }
+
+                board[e.ColumnIndex, e.RowIndex].Value = inputLetter; // Update the cell value to uppercase
             }
-            catch { }
+
+            CheckCompletion(); // Check game completion after each cell value change
         }
+
+        private void CheckCompletion()
+        {
+            bool allWordsCorrect = true;
+
+            foreach (DataGridViewRow row in board.Rows)
+            {
+                foreach (DataGridViewCell cell in row.Cells)
+                {
+                    if (cell.Style.BackColor == Color.White && cell.Tag != null) // Check only white cells with tags
+                    {
+                        string inputLetter = cell.Value?.ToString()?.ToUpper();
+                        if (inputLetter != cell.Tag.ToString().ToUpper())
+                        {
+                            allWordsCorrect = false;
+                            break;
+                        }
+                    }
+                }
+                if (!allWordsCorrect) break;
+            }
+
+            if (allWordsCorrect)
+            {
+                MessageBox.Show("Поздравляем! Вы успешно решили кроссворд!", "Победа", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Close(); // Close the crossword form upon victory
+            }
+        }
+
+
 
         private void openPuzzleToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -158,16 +345,25 @@ namespace Crossword_generator
 
         private void board_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            String number = "";
-            if (idc.Any(c => (number = c.number) != "" && c.X == e.ColumnIndex && c.Y == e.RowIndex))
+            // Can be left empty as numbering is now handled in PlaceWord
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F1)
             {
-                Rectangle r = new Rectangle(e.CellBounds.X, e.CellBounds.Y, e.CellBounds.Width, e.CellBounds.Height);
-                e.Graphics.FillRectangle(Brushes.White, r);
-                Font f = new Font(e.CellStyle.Font.FontFamily, 7);
-                e.Graphics.DrawString(number, f, Brushes.Black, r);
-                e.PaintContent(e.ClipBounds);
-                e.Handled = true;
+                Help.ShowHelp(this, link_2);
             }
+        }
+
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Gosha and Almir", "Creators program");
+        }
+
+        private void HlpButton_Click_1(object sender, EventArgs e)
+        {
+            Help.ShowHelp(this, link_1);
         }
     }
 
