@@ -9,33 +9,40 @@ namespace Crossword_Generator
 {
     public partial class CrossGen : Form
     {
+        // Создаём окно подсказок
         Clues clue_window = new Clues();
+
+        // Список слов
         List<id_cells> idCells = new List<id_cells>();
+
         Random rnd = new Random();
-        String puzzle_file;
+
+        // Путь до импортируемого списка слов
+        String listOfWords_file;
+
         public String link_1 = Application.StartupPath + "\\Вспомогательные ссылки\\Руководство пользователя.chm";
         public String link_2 = Application.StartupPath + "\\Вспомогательные ссылки\\Справочная служба.chm";
 
         public CrossGen()
         {
-            puzzle_file = Application.StartupPath + $"\\DataBase\\listOfWords.txt";
+            listOfWords_file = Application.StartupPath + $"\\DataBase\\listOfWords.txt";
 
             InitializeComponent();
 
             BuildWordList();
+
+            // Событие возникающее при закрывании окна // Обработчик события можно найти ближе к концу файла в разделе "ВЕРХНЕЕ МЕНЮ"
+            this.FormClosing += new FormClosingEventHandler(Form_Closing);
         }
 
-        private void exitButton(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
 
+        // Формирование списка слов из файла
         private void BuildWordList()
         {
-            if (File.Exists(puzzle_file))
+            if (File.Exists(listOfWords_file))
             {
                 String line = "";
-                using (StreamReader s = new StreamReader(puzzle_file))
+                using (StreamReader s = new StreamReader(listOfWords_file))
                 {
                     line = s.ReadLine();
                     while ((line = s.ReadLine()) != null)
@@ -46,11 +53,14 @@ namespace Crossword_Generator
                 }
             }
             else
-                MessageBox.Show("Список слов не найден: " + puzzle_file);
+                MessageBox.Show("Список слов не найден: " + listOfWords_file);
         }
+
+
 
         private void CrossGen_Load(object sender, EventArgs e)
         {
+            // Создаётся доска
             InitBoard();
             clue_window.SetDesktopLocation(this.Location.X + this.Width + 1, this.Location.Y);
             clue_window.StartPosition = FormStartPosition.Manual;
@@ -61,26 +71,26 @@ namespace Crossword_Generator
 
         private void InitBoard()
         {
-            board.BackgroundColor = Color.Black;
-            board.DefaultCellStyle.BackColor = Color.Black;
+            crossword.BackgroundColor = Color.Black;
+            crossword.DefaultCellStyle.BackColor = Color.Black;
 
             for (int i = 0; i < 21; i++)
             {
-                board.Rows.Add();
+                crossword.Rows.Add();
             }
 
-            foreach (DataGridViewColumn c in board.Columns)
+            foreach (DataGridViewColumn c in crossword.Columns)
             {
-                c.Width = board.Width / board.Columns.Count;
+                c.Width = crossword.Width / crossword.Columns.Count;
             }
 
-            foreach (DataGridViewRow r in board.Rows)
+            foreach (DataGridViewRow r in crossword.Rows)
             {
-                r.Height = board.Height / board.Rows.Count;
+                r.Height = crossword.Height / crossword.Rows.Count;
             }
 
             GenerateCrosswordPuzzle();
-            board.CellValueChanged += board_CellValueChanged;
+            crossword.CellValueChanged += board_CellValueChanged;
         }
 
         private void GenerateCrosswordPuzzle()
@@ -88,8 +98,8 @@ namespace Crossword_Generator
             idCells = idCells.OrderBy(x => rnd.Next()).ToList();  // Shuffle the list
             int wordNumber = 1;
             id_cells firstWord = idCells.First();
-            int startRow = board.Rows.Count / 2;
-            int startCol = board.Columns.Count / 2;
+            int startRow = crossword.Rows.Count / 2;
+            int startCol = crossword.Columns.Count / 2;
             bool direction = true; // Default direction is horizontal
             PlaceWord(startRow, startCol, firstWord.word, direction, wordNumber.ToString());
             clue_window.clue_table.Rows.Add(new String[] { wordNumber.ToString(), "ГОРИЗОНТАЛЬНО", firstWord.clue });
@@ -148,7 +158,7 @@ namespace Crossword_Generator
 
         private void ClearBoardContent()
         {
-            foreach (DataGridViewRow row in board.Rows)
+            foreach (DataGridViewRow row in crossword.Rows)
             {
                 foreach (DataGridViewCell cell in row.Cells)
                 {
@@ -170,18 +180,18 @@ namespace Crossword_Generator
                 int row = direction ? startRow : startRow + i;
                 int col = direction ? startCol + i : startCol;
 
-                if (row >= board.Rows.Count || col >= board.Columns.Count || row < 0 || col < 0)
+                if (row >= crossword.Rows.Count || col >= crossword.Columns.Count || row < 0 || col < 0)
                 {
                     return false;
                 }
 
-                if (board[col, row].Style.BackColor != Color.Black && board[col, row].Tag != null && board[col, row].Tag.ToString() != word.word[i].ToString())
+                if (crossword[col, row].Style.BackColor != Color.Black && crossword[col, row].Tag != null && crossword[col, row].Tag.ToString() != word.word[i].ToString())
                 {
                     return false;
                 }
 
                 // Additional check for word intersections
-                if (board[col, row].Tag != null && board[col, row].Tag.ToString() != word.word[i].ToString())
+                if (crossword[col, row].Tag != null && crossword[col, row].Tag.ToString() != word.word[i].ToString())
                 {
                     return false;
                 }
@@ -190,16 +200,16 @@ namespace Crossword_Generator
             // Ensure there is at least one empty cell before and after the word
             if (direction)
             {
-                if ((startCol > 0 && board[startCol - 1, startRow].Style.BackColor == Color.White) ||
-                    (startCol + length < board.Columns.Count && board[startCol + length, startRow].Style.BackColor == Color.White))
+                if ((startCol > 0 && crossword[startCol - 1, startRow].Style.BackColor == Color.White) ||
+                    (startCol + length < crossword.Columns.Count && crossword[startCol + length, startRow].Style.BackColor == Color.White))
                 {
                     return false;
                 }
             }
             else
             {
-                if ((startRow > 0 && board[startCol, startRow - 1].Style.BackColor == Color.White) ||
-                    (startRow + length < board.Rows.Count && board[startCol, startRow + length].Style.BackColor == Color.White))
+                if ((startRow > 0 && crossword[startCol, startRow - 1].Style.BackColor == Color.White) ||
+                    (startRow + length < crossword.Rows.Count && crossword[startCol, startRow + length].Style.BackColor == Color.White))
                 {
                     return false;
                 }
@@ -220,7 +230,7 @@ namespace Crossword_Generator
             // Place word number
             int numRow = direction ? startRow : startRow - 1;
             int numCol = direction ? startCol - 1 : startCol;
-            if (numRow >= 0 && numCol >= 0 && numRow < board.Rows.Count && numCol < board.Columns.Count)
+            if (numRow >= 0 && numCol >= 0 && numRow < crossword.Rows.Count && numCol < crossword.Columns.Count)
             {
                 FormatCell(numRow, numCol, number); // FormatCell now handles placing numbers
             }
@@ -229,7 +239,7 @@ namespace Crossword_Generator
 
         private void FormatCell(int row, int col, string content)
         {
-            DataGridViewCell cell = board[col, row];
+            DataGridViewCell cell = crossword[col, row];
 
             // Check if the content is a number (indicating word number)
             int number;
@@ -274,21 +284,21 @@ namespace Crossword_Generator
 
         private void board_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (board[e.ColumnIndex, e.RowIndex].Value != null)
+            if (crossword[e.ColumnIndex, e.RowIndex].Value != null)
             {
-                string inputLetter = board[e.ColumnIndex, e.RowIndex].Value.ToString().ToUpper(); // Convert input to uppercase
-                string correctLetter = board[e.ColumnIndex, e.RowIndex].Tag.ToString().ToUpper(); // Ensure correct letter is uppercase
+                string inputLetter = crossword[e.ColumnIndex, e.RowIndex].Value.ToString().ToUpper(); // Convert input to uppercase
+                string correctLetter = crossword[e.ColumnIndex, e.RowIndex].Tag.ToString().ToUpper(); // Ensure correct letter is uppercase
 
                 if (inputLetter == correctLetter)
                 {
-                    board[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.DarkGreen;
+                    crossword[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.DarkGreen;
                 }
                 else
                 {
-                    board[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.Red;
+                    crossword[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.Red;
                 }
 
-                board[e.ColumnIndex, e.RowIndex].Value = inputLetter; // Update the cell value to uppercase
+                crossword[e.ColumnIndex, e.RowIndex].Value = inputLetter; // Update the cell value to uppercase
             }
 
             CheckCompletion(); // Check game completion after each cell value change
@@ -298,7 +308,7 @@ namespace Crossword_Generator
         {
             bool allWordsCorrect = true;
 
-            foreach (DataGridViewRow row in board.Rows)
+            foreach (DataGridViewRow row in crossword.Rows)
             {
                 foreach (DataGridViewCell cell in row.Cells)
                 {
@@ -324,15 +334,20 @@ namespace Crossword_Generator
 
 
 
+        //
+        // ВЕРХНЕЕ МЕНЮ
+        //
+
+        // [Открыть список слов]
         private void openPuzzleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Puzzle Files|*.txt";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                puzzle_file = ofd.FileName;
+                listOfWords_file = ofd.FileName;
 
-                board.Rows.Clear();
+                crossword.Rows.Clear();
                 clue_window.clue_table.Rows.Clear();
                 idCells.Clear();
 
@@ -341,6 +356,26 @@ namespace Crossword_Generator
             }
         }
 
+        // [Руководство пользователя]
+        private void usersGuideToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Help.ShowHelp(this, link_1);
+        }
+
+        // [Авторы]
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Баязитов Эльмир \r\nembaiazitov@edu.hse.ru\n \nЯкутов Георгий\r\ngaiakutov@edu.hse.ru", "Авторы");
+        }
+
+        // Кнопка закрытия окна // Обработчик события
+        private void Form_Closing(object sender, FormClosingEventArgs e)
+        {
+            Application.Exit();
+        }
+
+
+        // 
         private void CrossGen_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F1)
@@ -349,19 +384,15 @@ namespace Crossword_Generator
             }
         }
 
-        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        // Ячейка
+        private void crossword_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            MessageBox.Show("Gosha and Almir", "Creators program");
+
         }
 
-        private void HlpButton_Click_1(object sender, EventArgs e)
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            Help.ShowHelp(this, link_1);
-        }
 
-        private void usersGuideToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Help.ShowHelp(this, link_1);
         }
     }
 

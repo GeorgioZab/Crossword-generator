@@ -23,13 +23,13 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CrossGen));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openPuzzleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usersGuideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.board = new System.Windows.Forms.DataGridView();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.crossword = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,7 +52,7 @@
             this.Column20 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column21 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.board)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.crossword)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -64,17 +64,17 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(825, 30);
+            this.menuStrip1.Size = new System.Drawing.Size(825, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openPuzzleToolStripMenuItem,
-            this.exitToolStripMenuItem});
+            this.openPuzzleToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(59, 26);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
             this.fileToolStripMenuItem.Text = "Файл";
             // 
             // openPuzzleToolStripMenuItem
@@ -85,36 +85,29 @@
             this.openPuzzleToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.openPuzzleToolStripMenuItem.Click += new System.EventHandler(this.openPuzzleToolStripMenuItem_Click);
             // 
-            // exitToolStripMenuItem
+            // usersGuideToolStripMenuItem
             // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(238, 26);
-            this.exitToolStripMenuItem.Text = "Выход";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitButton);
+            this.usersGuideToolStripMenuItem.Name = "usersGuideToolStripMenuItem";
+            this.usersGuideToolStripMenuItem.Size = new System.Drawing.Size(209, 24);
+            this.usersGuideToolStripMenuItem.Text = "Руководство пользователя";
+            this.usersGuideToolStripMenuItem.Click += new System.EventHandler(this.usersGuideToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(76, 26);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
             this.helpToolStripMenuItem.Text = "Авторы";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
             // 
-            // usersGuideToolStripMenuItem
+            // crossword
             // 
-            this.usersGuideToolStripMenuItem.Name = "usersGuideToolStripMenuItem";
-            this.usersGuideToolStripMenuItem.Size = new System.Drawing.Size(209, 26);
-            this.usersGuideToolStripMenuItem.Text = "Руководство пользователя";
-            this.usersGuideToolStripMenuItem.Click += new System.EventHandler(this.usersGuideToolStripMenuItem_Click);
-            // 
-            // board
-            // 
-            this.board.AllowUserToAddRows = false;
-            this.board.AllowUserToDeleteRows = false;
-            this.board.AllowUserToResizeColumns = false;
-            this.board.AllowUserToResizeRows = false;
-            this.board.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.board.ColumnHeadersVisible = false;
-            this.board.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.crossword.AllowUserToAddRows = false;
+            this.crossword.AllowUserToDeleteRows = false;
+            this.crossword.AllowUserToResizeColumns = false;
+            this.crossword.AllowUserToResizeRows = false;
+            this.crossword.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.crossword.ColumnHeadersVisible = false;
+            this.crossword.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
             this.Column2,
             this.Column3,
@@ -144,18 +137,19 @@
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.board.DefaultCellStyle = dataGridViewCellStyle1;
-            this.board.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.board.GridColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.board.Location = new System.Drawing.Point(0, 30);
-            this.board.Margin = new System.Windows.Forms.Padding(4);
-            this.board.Name = "board";
-            this.board.RowHeadersVisible = false;
-            this.board.RowHeadersWidth = 51;
-            this.board.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.board.Size = new System.Drawing.Size(825, 622);
-            this.board.TabIndex = 1;
-            this.board.LocationChanged += new System.EventHandler(this.CrossGen_LocationChanged);
+            this.crossword.DefaultCellStyle = dataGridViewCellStyle1;
+            this.crossword.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.crossword.GridColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.crossword.Location = new System.Drawing.Point(0, 28);
+            this.crossword.Margin = new System.Windows.Forms.Padding(4);
+            this.crossword.Name = "crossword";
+            this.crossword.RowHeadersVisible = false;
+            this.crossword.RowHeadersWidth = 51;
+            this.crossword.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.crossword.Size = new System.Drawing.Size(825, 624);
+            this.crossword.TabIndex = 1;
+            this.crossword.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.crossword_CellContentClick);
+            this.crossword.LocationChanged += new System.EventHandler(this.CrossGen_LocationChanged);
             // 
             // Column1
             // 
@@ -330,14 +324,14 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(825, 652);
-            this.Controls.Add(this.board);
+            this.Controls.Add(this.crossword);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "CrossGen";
-            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CrossGen";
             this.Load += new System.EventHandler(this.CrossGen_Load);
@@ -345,7 +339,7 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CrossGen_KeyDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.board)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.crossword)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -356,9 +350,8 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openPuzzleToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.DataGridView board;
+        private System.Windows.Forms.DataGridView crossword;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;

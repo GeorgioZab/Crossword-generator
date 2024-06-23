@@ -48,34 +48,42 @@
             this.Column3});
             this.clue_table.Dock = System.Windows.Forms.DockStyle.Fill;
             this.clue_table.Location = new System.Drawing.Point(0, 0);
+            this.clue_table.Margin = new System.Windows.Forms.Padding(4);
             this.clue_table.Name = "clue_table";
             this.clue_table.RowHeadersVisible = false;
-            this.clue_table.Size = new System.Drawing.Size(384, 530);
+            this.clue_table.RowHeadersWidth = 51;
+            this.clue_table.Size = new System.Drawing.Size(512, 652);
             this.clue_table.TabIndex = 0;
+            this.clue_table.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.clue_table_CellContentClick);
             // 
             // Column1
             // 
             this.Column1.HeaderText = "#";
+            this.Column1.MinimumWidth = 6;
             this.Column1.Name = "Column1";
             this.Column1.Width = 35;
             // 
             // Column2
             // 
             this.Column2.HeaderText = "Direction";
+            this.Column2.MinimumWidth = 6;
             this.Column2.Name = "Column2";
+            this.Column2.Width = 125;
             // 
             // Column3
             // 
             this.Column3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Column3.HeaderText = "Clue";
+            this.Column3.MinimumWidth = 6;
             this.Column3.Name = "Column3";
             // 
             // Clues
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 530);
+            this.ClientSize = new System.Drawing.Size(512, 652);
             this.Controls.Add(this.clue_table);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Clues";
@@ -83,7 +91,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = " Clues";
-            //this.Load += new System.EventHandler(this.Clues_Load);
             ((System.ComponentModel.ISupportInitialize)(this.clue_table)).EndInit();
             this.ResumeLayout(false);
 

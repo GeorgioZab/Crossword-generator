@@ -16,6 +16,20 @@ namespace Crossword_Generator
             clueTable.Columns[1].Name = "Direction";
             clueTable.Columns[2].Name = "Clue";
             this.Controls.Add(clueTable);
+
+            // Событие возникающее при закрывании окна
+            this.FormClosing += new FormClosingEventHandler(Form_Closing);
+        }
+
+        // Обработчик события
+        private void Form_Closing(object sender, FormClosingEventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void clue_table_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }
