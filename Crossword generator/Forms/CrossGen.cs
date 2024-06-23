@@ -93,67 +93,100 @@ namespace Crossword_Generator
             crossword.CellValueChanged += board_CellValueChanged;
         }
 
-        private void GenerateCrosswordPuzzle()
+        public void GenerateCrosswordPuzzle()
         {
-            idCells = idCells.OrderBy(x => rnd.Next()).ToList();  // Shuffle the list
-            int wordNumber = 1;
-            id_cells firstWord = idCells.First();
-            int startRow = crossword.Rows.Count / 2;
-            int startCol = crossword.Columns.Count / 2;
-            bool direction = true; // Default direction is horizontal
-            PlaceWord(startRow, startCol, firstWord.word, direction, wordNumber.ToString());
-            clue_window.clue_table.Rows.Add(new String[] { wordNumber.ToString(), "ГОРИЗОНТАЛЬНО", firstWord.clue });
-            wordNumber++;
+            int wordCount = 0;
 
-            List<id_cells> placedWords = new List<id_cells> { new id_cells(startCol, startRow, "ГОРИЗОНТАЛЬНО", wordNumber.ToString(), firstWord.word, firstWord.clue) };
-
-            foreach (id_cells i in idCells.Skip(1))
+            while (wordCount < 9)
             {
-                bool placed = false;
+                crossword.Rows.Clear();
+                crossword.Columns.Clear();
 
-                foreach (id_cells placedWord in placedWords)
+                for (int i = 0; i < 21; i++)
                 {
-                    for (int j = 0; j < placedWord.word.Length; j++)
+                    crossword.Columns.Add(new DataGridViewTextBoxColumn());
+                    crossword.Rows.Add();
+                }
+
+                foreach (DataGridViewColumn c in crossword.Columns)
+                {
+                    c.Width = crossword.Width / crossword.Columns.Count;
+                }
+
+                foreach (DataGridViewRow r in crossword.Rows)
+                {
+                    r.Height = crossword.Height / crossword.Rows.Count;
+                }
+
+                idCells = idCells.OrderBy(x => rnd.Next()).ToList();  // Перемешиваем список слов
+                wordCount = 0;
+                int wordNumber = 1;
+
+                // Размещаем первое слово в центре доски
+                id_cells firstWord = idCells.First();
+                int startRow = crossword.Rows.Count / 2;
+                int startCol = crossword.Columns.Count / 2;
+                bool direction = true; // По умолчанию направление горизонтальное
+                PlaceWord(startRow, startCol, firstWord.word, direction, wordNumber.ToString());
+                clue_window.clue_table.Rows.Add(new String[] { wordNumber.ToString(), "ГОРИЗОНТАЛЬНО", firstWord.clue });
+                wordNumber++;
+                wordCount++;
+
+                // Список размещенных слов с их позициями и направлениями
+                List<id_cells> placedWords = new List<id_cells> { new id_cells(startCol, startRow, "ГОРИЗОНТАЛЬНО", wordNumber.ToString(), firstWord.word, firstWord.clue) };
+
+                // Перебираем остальные слова и пытаемся их разместить
+                foreach (id_cells i in idCells.Skip(1))
+                {
+                    bool placed = false;
+
+                    foreach (id_cells placedWord in placedWords)
                     {
-                        for (int k = 0; k < i.word.Length; k++)
+                        for (int j = 0; j < placedWord.word.Length; j++)
                         {
-                            if (placedWord.word[j] == i.word[k])
+                            for (int k = 0; k < i.word.Length; k++)
                             {
-                                // Try to place vertically
-                                if (CanPlaceWord(placedWord.Y + j - k, placedWord.X, i.word.Length, false, i))
+                                if (placedWord.word[j] == i.word[k])
                                 {
-                                    PlaceWord(placedWord.Y + j - k, placedWord.X, i.word, false, wordNumber.ToString());
-                                    clue_window.clue_table.Rows.Add(new String[] { wordNumber.ToString(), "ВЕРТИКАЛЬНО", i.clue });
-                                    wordNumber++;
-                                    placedWords.Add(new id_cells(placedWord.X, placedWord.Y + j - k, "ВЕРТИКАЛЬНО", wordNumber.ToString(), i.word, i.clue));
-                                    placed = true;
-                                    break;
-                                }
-                                // Try to place horizontally
-                                else if (CanPlaceWord(placedWord.Y, placedWord.X + j - k, i.word.Length, true, i))
-                                {
-                                    PlaceWord(placedWord.Y, placedWord.X + j - k, i.word, true, wordNumber.ToString());
-                                    clue_window.clue_table.Rows.Add(new String[] { wordNumber.ToString(), "ГОРИЗОНТАЛЬНО", i.clue });
-                                    wordNumber++;
-                                    placedWords.Add(new id_cells(placedWord.X + j - k, placedWord.Y, "ГОРИЗОНТАЛЬНО", wordNumber.ToString(), i.word, i.clue));
-                                    placed = true;
-                                    break;
+                                    // Пытаемся разместить вертикально
+                                    if (CanPlaceWord(placedWord.Y + j - k, placedWord.X, i.word.Length, false, i))
+                                    {
+                                        PlaceWord(placedWord.Y + j - k, placedWord.X, i.word, false, wordNumber.ToString());
+                                        clue_window.clue_table.Rows.Add(new String[] { wordNumber.ToString(), "ВЕРТИКАЛЬНО", i.clue });
+                                        placedWords.Add(new id_cells(placedWord.X, placedWord.Y + j - k, "ВЕРТИКАЛЬНО", wordNumber.ToString(), i.word, i.clue));
+                                        wordNumber++;
+                                        wordCount++;
+                                        placed = true;
+                                        break;
+                                    }
+                                    // Пытаемся разместить горизонтально
+                                    else if (CanPlaceWord(placedWord.Y, placedWord.X + j - k, i.word.Length, true, i))
+                                    {
+                                        PlaceWord(placedWord.Y, placedWord.X + j - k, i.word, true, wordNumber.ToString());
+                                        clue_window.clue_table.Rows.Add(new String[] { wordNumber.ToString(), "ГОРИЗОНТАЛЬНО", i.clue });
+                                        placedWords.Add(new id_cells(placedWord.X + j - k, placedWord.Y, "ГОРИЗОНТАЛЬНО", wordNumber.ToString(), i.word, i.clue));
+                                        wordNumber++;
+                                        wordCount++;
+                                        placed = true;
+                                        break;
+                                    }
                                 }
                             }
+                            if (placed) break;
                         }
                         if (placed) break;
                     }
-                    if (placed) break;
-                }
-                if (!placed)
-                {
-                    // Log message if word couldn't be placed
-                    Console.WriteLine($"Couldn't place word: {i.word}");
-                }
-            }
 
-            // Очистка доски от лишних значений
-            ClearBoardContent();
+                    if (!placed)
+                    {
+                        // Сообщение в консоль, если слово не удалось разместить
+                        Console.WriteLine($"Не удалось разместить слово: {i.word}");
+                    }
+                }
+
+                // Очистка доски от лишних значений
+                ClearBoardContent();
+            }
         }
 
         private void ClearBoardContent()
@@ -173,8 +206,10 @@ namespace Crossword_Generator
             }
         }
 
-        private bool CanPlaceWord(int startRow, int startCol, int length, bool direction, id_cells word)
+        public bool CanPlaceWord(int startRow, int startCol, int length, bool direction, id_cells word)
         {
+            bool hasIntersection = false;
+
             for (int i = 0; i < length; i++)
             {
                 int row = direction ? startRow : startRow + i;
@@ -185,17 +220,20 @@ namespace Crossword_Generator
                     return false;
                 }
 
-                if (crossword[col, row].Style.BackColor != Color.Black && crossword[col, row].Tag != null && crossword[col, row].Tag.ToString() != word.word[i].ToString())
+                if (crossword[col, row].Style.BackColor != Color.Black && crossword[col, row].Tag != null)
                 {
-                    return false;
-                }
-
-                // Additional check for word intersections
-                if (crossword[col, row].Tag != null && crossword[col, row].Tag.ToString() != word.word[i].ToString())
-                {
-                    return false;
+                    if (crossword[col, row].Tag.ToString() == word.word[i].ToString())
+                    {
+                        hasIntersection = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
             }
+
+            if (!hasIntersection) return false;
 
             // Ensure there is at least one empty cell before and after the word
             if (direction)
