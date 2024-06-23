@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Crossword_Generator.Clues">
+    <Position X="1.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAACAAAAGAAA4AAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Clues.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crossword_Generator.CrossGen">
+    <Position X="3.75" Y="0.75" Width="1.5" />
+    <Members>
+      <Field Name="Column1" Hidden="true" />
+      <Field Name="Column10" Hidden="true" />
+      <Field Name="Column11" Hidden="true" />
+      <Field Name="Column12" Hidden="true" />
+      <Field Name="Column13" Hidden="true" />
+      <Field Name="Column14" Hidden="true" />
+      <Field Name="Column15" Hidden="true" />
+      <Field Name="Column16" Hidden="true" />
+      <Field Name="Column17" Hidden="true" />
+      <Field Name="Column18" Hidden="true" />
+      <Field Name="Column19" Hidden="true" />
+      <Field Name="Column2" Hidden="true" />
+      <Field Name="Column20" Hidden="true" />
+      <Field Name="Column21" Hidden="true" />
+      <Field Name="Column3" Hidden="true" />
+      <Field Name="Column4" Hidden="true" />
+      <Field Name="Column5" Hidden="true" />
+      <Field Name="Column6" Hidden="true" />
+      <Field Name="Column7" Hidden="true" />
+      <Field Name="Column8" Hidden="true" />
+      <Field Name="Column9" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BSCEMAAIkyICAQACAAKDAAECAIi8ZwIAYkAEMAAAMpA=</HashCode>
+      <FileName>CrossGen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crossword_Generator.id_cells">
+    <Position X="5.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAYAAAAAAAAAAAAAAAAAAAAAABAAAAYAA=</HashCode>
+      <FileName>CrossGen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

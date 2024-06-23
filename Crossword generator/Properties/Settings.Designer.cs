@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Crossword_generator.Properties
+namespace Crossword_Generator.Properties
 {
 
 

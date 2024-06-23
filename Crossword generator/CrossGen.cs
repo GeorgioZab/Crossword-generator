@@ -5,27 +5,27 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Crossword_generator
+namespace Crossword_Generator
 {
-    public partial class Form1 : Form
+    public partial class CrossGen : Form
     {
         Clues clue_window = new Clues();
-        List<id_cells> idc = new List<id_cells>();
+        List<id_cells> idCells = new List<id_cells>();
         Random rnd = new Random();
         String puzzle_file;
         public String link_1 = Application.StartupPath + "\\Вспомогательные ссылки\\Руководство пользователя.chm";
         public String link_2 = Application.StartupPath + "\\Вспомогательные ссылки\\Справочная служба.chm";
 
-        public Form1()
+        public CrossGen()
         {
-            puzzle_file = Application.StartupPath + $"\\Puzzles\\puzzle_1.pzl";
+            puzzle_file = Application.StartupPath + $"\\DataBase\\listOfWords.txt";
 
             InitializeComponent();
 
             BuildWordList();
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void exitButton(object sender, EventArgs e)
         {
             Application.Exit();
         }
@@ -41,17 +41,15 @@ namespace Crossword_generator
                     while ((line = s.ReadLine()) != null)
                     {
                         String[] l = line.Split('|');
-                        idc.Add(new id_cells(Int32.Parse(l[0]), Int32.Parse(l[1]), l[2], l[3], l[4], l[5]));
+                        idCells.Add(new id_cells(Int32.Parse(l[0]), Int32.Parse(l[1]), l[2], l[3], l[4], l[5]));
                     }
                 }
             }
             else
-            {
-                MessageBox.Show("Файл пазла не найден: " + puzzle_file);
-            }
+                MessageBox.Show("Список слов не найден: " + puzzle_file);
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void CrossGen_Load(object sender, EventArgs e)
         {
             InitBoard();
             clue_window.SetDesktopLocation(this.Location.X + this.Width + 1, this.Location.Y);
@@ -87,9 +85,9 @@ namespace Crossword_generator
 
         private void GenerateCrosswordPuzzle()
         {
-            idc = idc.OrderBy(x => rnd.Next()).ToList();  // Shuffle the list
+            idCells = idCells.OrderBy(x => rnd.Next()).ToList();  // Shuffle the list
             int wordNumber = 1;
-            id_cells firstWord = idc.First();
+            id_cells firstWord = idCells.First();
             int startRow = board.Rows.Count / 2;
             int startCol = board.Columns.Count / 2;
             bool direction = true; // Default direction is horizontal
@@ -99,7 +97,7 @@ namespace Crossword_generator
 
             List<id_cells> placedWords = new List<id_cells> { new id_cells(startCol, startRow, "ГОРИЗОНТАЛЬНО", wordNumber.ToString(), firstWord.word, firstWord.clue) };
 
-            foreach (id_cells i in idc.Skip(1))
+            foreach (id_cells i in idCells.Skip(1))
             {
                 bool placed = false;
 
@@ -269,7 +267,7 @@ namespace Crossword_generator
         }
 
 
-        private void Form1_LocationChanged(object sender, EventArgs e)
+        private void CrossGen_LocationChanged(object sender, EventArgs e)
         {
             clue_window.SetDesktopLocation(this.Location.X + this.Width + 1, this.Location.Y);
         }
@@ -329,26 +327,21 @@ namespace Crossword_generator
         private void openPuzzleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Puzzle Files|*.pzl";
+            ofd.Filter = "Puzzle Files|*.txt";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 puzzle_file = ofd.FileName;
 
                 board.Rows.Clear();
                 clue_window.clue_table.Rows.Clear();
-                idc.Clear();
+                idCells.Clear();
 
                 BuildWordList();
                 InitBoard();
             }
         }
 
-        private void board_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
-        {
-            // Can be left empty as numbering is now handled in PlaceWord
-        }
-
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        private void CrossGen_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F1)
             {
@@ -362,6 +355,11 @@ namespace Crossword_generator
         }
 
         private void HlpButton_Click_1(object sender, EventArgs e)
+        {
+            Help.ShowHelp(this, link_1);
+        }
+
+        private void usersGuideToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Help.ShowHelp(this, link_1);
         }
