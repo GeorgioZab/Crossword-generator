@@ -108,11 +108,13 @@ namespace Crossword_Generator
         public void GenerateCrosswordPuzzle()
         {
             int wordCount = 0;
+            int numbersCount = 0;
 
-            while (wordCount < 9)
+            while (wordCount < 9 || numbersCount != wordCount)
             {
                 crossword.Rows.Clear();
                 crossword.Columns.Clear();
+                clue_window.clue_table.Rows.Clear();
 
                 for (int i = 0; i < 21; i++)
                 {
@@ -198,7 +200,26 @@ namespace Crossword_Generator
 
                 // Очистка доски от лишних значений
                 ClearBoardContent();
+
+                // Check if all numbers are visible
+                numbersCount = CheckAllNumbersVisible();
             }
+        }
+
+        private int CheckAllNumbersVisible()
+        {
+            int numbersCount = 0;
+            foreach (DataGridViewRow row in crossword.Rows)
+            {
+                foreach (DataGridViewCell cell in row.Cells)
+                {
+                    if (cell.Style.BackColor == Color.White && int.TryParse(cell.Value?.ToString(), out _))
+                    {
+                        numbersCount++;
+                    }
+                }
+            }
+            return numbersCount;
         }
 
         private void ClearBoardContent()
