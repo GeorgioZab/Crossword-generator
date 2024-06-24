@@ -82,7 +82,6 @@
             this.MaximizeBox = false;
             this.Name = "MainMenu";
             this.Text = "CrossGen";
-            this.Load += new System.EventHandler(this.MainMenu_Load);
             ((System.ComponentModel.ISupportInitialize)(this.logo)).EndInit();
             this.ResumeLayout(false);
 

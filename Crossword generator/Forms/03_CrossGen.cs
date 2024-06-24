@@ -9,32 +9,44 @@ namespace Crossword_Generator
 {
     public partial class CrossGen : Form
     {
+        Random rnd = new Random();
+
         // Создаём окно подсказок
         Clues clue_window = new Clues();
 
         // Список слов
         List<id_cells> idCells = new List<id_cells>();
 
-        Random rnd = new Random();
-
         // Путь до импортируемого списка слов
         String listOfWords_file;
 
+        // Пути до вспомогательных файлов
         public String link_1 = Application.StartupPath + "\\Вспомогательные ссылки\\Руководство пользователя.chm";
         public String link_2 = Application.StartupPath + "\\Вспомогательные ссылки\\Справочная служба.chm";
 
         public CrossGen()
         {
-            listOfWords_file = Application.StartupPath + $"\\DataBase\\listOfWords.txt";
+            InitializeComponent();
+        }
+
+        public CrossGen(String path)
+        {
+            listOfWords_file = path;
 
             InitializeComponent();
 
             BuildWordList();
 
+
             // Событие возникающее при закрывании окна // Обработчик события можно найти ближе к концу файла в разделе "ВЕРХНЕЕ МЕНЮ"
             this.FormClosing += new FormClosingEventHandler(Form_Closing);
         }
 
+
+
+        //
+        // ОСНОВНЫЕ МЕТОДЫ АЛГОРИТМА СОЗДАНИЯ КРОССВОРДА
+        //
 
         // Формирование списка слов из файла
         private void BuildWordList()
@@ -377,7 +389,7 @@ namespace Crossword_Generator
         //
 
         // [Открыть список слов]
-        private void openPuzzleToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenListOfWords_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Puzzle Files|*.txt";
@@ -394,19 +406,25 @@ namespace Crossword_Generator
             }
         }
 
+        // [Показать ответы]
+        private void ShowAnswers_ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
         // [Руководство пользователя]
-        private void usersGuideToolStripMenuItem_Click(object sender, EventArgs e)
+        private void UsersGuide_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Help.ShowHelp(this, link_1);
         }
 
         // [Авторы]
-        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Authors_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Баязитов Эльмир \r\nembaiazitov@edu.hse.ru\n \nЯкутов Георгий\r\ngaiakutov@edu.hse.ru", "Авторы");
         }
 
-        // Кнопка закрытия окна // Обработчик события
+        // [x] Кнопка закрытия окна // Обработчик события
         private void Form_Closing(object sender, FormClosingEventArgs e)
         {
             Application.Exit();
@@ -423,15 +441,6 @@ namespace Crossword_Generator
         }
 
         // Ячейка
-        private void crossword_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
     }
 
     public class id_cells

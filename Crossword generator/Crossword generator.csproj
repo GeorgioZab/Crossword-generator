@@ -74,43 +74,43 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\SelectDB.cs">
+    <Compile Include="Forms\02_SelectList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SelectDB.Designer.cs">
-      <DependentUpon>SelectDB.cs</DependentUpon>
+    <Compile Include="Forms\02_SelectList.Designer.cs">
+      <DependentUpon>02_SelectList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Clues.cs">
+    <Compile Include="Forms\03_Clues.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Clues.Designer.cs">
-      <DependentUpon>Clues.cs</DependentUpon>
+    <Compile Include="Forms\03_Clues.Designer.cs">
+      <DependentUpon>03_Clues.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CrossGen.cs">
+    <Compile Include="Forms\03_CrossGen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\CrossGen.Designer.cs">
-      <DependentUpon>CrossGen.cs</DependentUpon>
+    <Compile Include="Forms\03_CrossGen.Designer.cs">
+      <DependentUpon>03_CrossGen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MainMenu.cs">
+    <Compile Include="Forms\01_MainMenu.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MainMenu.Designer.cs">
-      <DependentUpon>MainMenu.cs</DependentUpon>
+    <Compile Include="Forms\01_MainMenu.Designer.cs">
+      <DependentUpon>01_MainMenu.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\SelectDB.resx">
-      <DependentUpon>SelectDB.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\02_SelectList.resx">
+      <DependentUpon>02_SelectList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Clues.resx">
-      <DependentUpon>Clues.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\03_Clues.resx">
+      <DependentUpon>03_Clues.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossGen.resx">
-      <DependentUpon>CrossGen.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\03_CrossGen.resx">
+      <DependentUpon>03_CrossGen.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MainMenu.resx">
-      <DependentUpon>MainMenu.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\01_MainMenu.resx">
+      <DependentUpon>01_MainMenu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -152,7 +152,7 @@
   <ItemGroup>
     <Content Include="Images\IcoCrossGen.ico" />
     <Content Include="Images\LogoCrossGen.png" />
-    <Content Include="DataBase\listOfWords.txt">
+    <Content Include="Lists\listOfWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

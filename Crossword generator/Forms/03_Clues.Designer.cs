@@ -54,7 +54,6 @@
             this.clue_table.RowHeadersWidth = 51;
             this.clue_table.Size = new System.Drawing.Size(512, 652);
             this.clue_table.TabIndex = 0;
-            this.clue_table.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.clue_table_CellContentClick);
             // 
             // Column1
             // 

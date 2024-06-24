@@ -15,16 +15,11 @@ namespace Crossword_Generator
             Application.Exit();
         }
 
-        private void MainMenu_Load(object sender, EventArgs e)
-        {
-
-        }
-
         // [Начать]
         private void button1_Click(object sender, EventArgs e)
         {
             this.Hide();
-            SelectDB selectDB = new SelectDB();
+            SelectList selectDB = new SelectList();
             selectDB.Show();
         }
 

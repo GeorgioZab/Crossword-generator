@@ -27,6 +27,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openPuzzleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.показатьОтветыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usersGuideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.crossword = new System.Windows.Forms.DataGridView();
@@ -67,12 +68,12 @@
             this.menuStrip1.Size = new System.Drawing.Size(825, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
-            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openPuzzleToolStripMenuItem});
+            this.openPuzzleToolStripMenuItem,
+            this.показатьОтветыToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
             this.fileToolStripMenuItem.Text = "Файл";
@@ -83,21 +84,28 @@
             this.openPuzzleToolStripMenuItem.Size = new System.Drawing.Size(238, 26);
             this.openPuzzleToolStripMenuItem.Text = "Открыть список слов";
             this.openPuzzleToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.openPuzzleToolStripMenuItem.Click += new System.EventHandler(this.openPuzzleToolStripMenuItem_Click);
+            this.openPuzzleToolStripMenuItem.Click += new System.EventHandler(this.OpenListOfWords_ToolStripMenuItem_Click);
+            // 
+            // показатьОтветыToolStripMenuItem
+            // 
+            this.показатьОтветыToolStripMenuItem.Name = "показатьОтветыToolStripMenuItem";
+            this.показатьОтветыToolStripMenuItem.Size = new System.Drawing.Size(238, 26);
+            this.показатьОтветыToolStripMenuItem.Text = "Показать ответы";
+            this.показатьОтветыToolStripMenuItem.Click += new System.EventHandler(this.ShowAnswers_ToolStripMenuItem_Click);
             // 
             // usersGuideToolStripMenuItem
             // 
             this.usersGuideToolStripMenuItem.Name = "usersGuideToolStripMenuItem";
             this.usersGuideToolStripMenuItem.Size = new System.Drawing.Size(209, 24);
             this.usersGuideToolStripMenuItem.Text = "Руководство пользователя";
-            this.usersGuideToolStripMenuItem.Click += new System.EventHandler(this.usersGuideToolStripMenuItem_Click);
+            this.usersGuideToolStripMenuItem.Click += new System.EventHandler(this.UsersGuide_ToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
             this.helpToolStripMenuItem.Text = "Авторы";
-            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.Authors_ToolStripMenuItem_Click);
             // 
             // crossword
             // 
@@ -148,7 +156,6 @@
             this.crossword.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.crossword.Size = new System.Drawing.Size(825, 624);
             this.crossword.TabIndex = 1;
-            this.crossword.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.crossword_CellContentClick);
             this.crossword.LocationChanged += new System.EventHandler(this.CrossGen_LocationChanged);
             // 
             // Column1
@@ -374,6 +381,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column20;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column21;
         private System.Windows.Forms.ToolStripMenuItem usersGuideToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem показатьОтветыToolStripMenuItem;
     }
 }
 
