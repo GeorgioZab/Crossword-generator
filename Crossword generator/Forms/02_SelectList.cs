@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Crossword_Generator
 {
@@ -15,7 +16,7 @@ namespace Crossword_Generator
             this.FormClosing += new FormClosingEventHandler(Form_Closing);
         }
 
-        // [Существующий]
+        // [Имеющийся]
         private void startButton_Click(object sender, EventArgs e)
         {
             this.Hide();
@@ -23,8 +24,14 @@ namespace Crossword_Generator
             crossGen.Show();
         }
 
+        // (iconOfExplorer)
+        private void iconOfExplorer_Click(object sender, EventArgs e)
+        {
+            Process.Start("explorer.exe", Application.StartupPath + $"\\Lists");
+        }
+
         // [Открыть...]
-        private void button1_Click(object sender, EventArgs e)
+        public void openButton_Click(object sender, EventArgs e)
         {
             // Инициализируем объект класса OpenFileDialog, задаём фильтр и выбираем путь до файла
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -52,7 +59,7 @@ namespace Crossword_Generator
         }
 
         // [Назад]
-        private void button2_Click(object sender, EventArgs e)
+        private void backButton_Click(object sender, EventArgs e)
         {
             this.Hide();
             MainMenu mainMenu = new MainMenu();

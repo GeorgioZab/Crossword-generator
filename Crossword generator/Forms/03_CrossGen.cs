@@ -302,7 +302,7 @@ namespace Crossword_Generator
             int numCol = direction ? startCol - 1 : startCol;
             if (numRow >= 0 && numCol >= 0 && numRow < crossword.Rows.Count && numCol < crossword.Columns.Count)
             {
-                FormatCell(numRow, numCol, number); 
+                FormatCell(numRow, numCol, number);
             }
         }
 
@@ -396,10 +396,7 @@ namespace Crossword_Generator
             }
 
             if (allWordsCorrect)
-            {
                 MessageBox.Show("Поздравляем! Вы успешно решили кроссворд!", "Победа", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Close(); // Close the crossword form upon victory
-            }
         }
 
 
@@ -411,6 +408,10 @@ namespace Crossword_Generator
         // [Открыть список слов]
         private void OpenListOfWords_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            this.Hide();
+            SelectList selectList = new SelectList();
+            
+
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Puzzle Files|*.txt";
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -443,8 +444,6 @@ namespace Crossword_Generator
                     }
                 }
             }
-
-            MessageBox.Show("Все слова показаны на доске.", "Показать ответы", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
 
@@ -455,6 +454,13 @@ namespace Crossword_Generator
         private void UsersGuide_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Help.ShowHelp(this, link_1);
+        }
+        private void CrossGen_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F1)
+            {
+                Help.ShowHelp(this, link_2);
+            }
         }
 
         // [Авторы]
@@ -468,18 +474,6 @@ namespace Crossword_Generator
         {
             Application.Exit();
         }
-
-
-        // 
-        private void CrossGen_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.F1)
-            {
-                Help.ShowHelp(this, link_2);
-            }
-        }
-
-        // Ячейка
     }
 
     public class id_cells

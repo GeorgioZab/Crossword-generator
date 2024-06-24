@@ -82,7 +82,7 @@
             // 
             this.openPuzzleToolStripMenuItem.Name = "openPuzzleToolStripMenuItem";
             this.openPuzzleToolStripMenuItem.Size = new System.Drawing.Size(238, 26);
-            this.openPuzzleToolStripMenuItem.Text = "Открыть список слов";
+            this.openPuzzleToolStripMenuItem.Text = "Открыть другой список слов";
             this.openPuzzleToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.openPuzzleToolStripMenuItem.Click += new System.EventHandler(this.OpenListOfWords_ToolStripMenuItem_Click);
             // 

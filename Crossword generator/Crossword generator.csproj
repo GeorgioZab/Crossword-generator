@@ -150,6 +150,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\explorerIcon.png" />
     <Content Include="Images\IcoCrossGen.ico" />
     <Content Include="Images\LogoCrossGen.png" />
     <Content Include="Lists\listOfWords.txt">
