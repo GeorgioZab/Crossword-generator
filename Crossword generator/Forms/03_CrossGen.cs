@@ -110,7 +110,7 @@ namespace Crossword_Generator
             int wordCount = 0;
             int numbersCount = 0;
 
-            while (wordCount < 9 || numbersCount != wordCount)
+            while (wordCount < 7 || numbersCount != wordCount)
             {
                 crossword.Rows.Clear();
                 crossword.Columns.Clear();
@@ -201,7 +201,7 @@ namespace Crossword_Generator
                 // Очистка доски от лишних значений
                 ClearBoardContent();
 
-                // Check if all numbers are visible
+                // Проверка, видны ли все цифры
                 numbersCount = CheckAllNumbersVisible();
             }
         }
@@ -232,7 +232,7 @@ namespace Crossword_Generator
                     {
                         if (cell.Value != null && !int.TryParse(cell.Value.ToString(), out _))
                         {
-                            cell.Value = null; // Clear the cell value if it's not a number
+                            cell.Value = null; // Очистка значения ячейки, если это не число
                         }
                     }
                 }
@@ -268,7 +268,7 @@ namespace Crossword_Generator
 
             if (!hasIntersection) return false;
 
-            // Ensure there is at least one empty cell before and after the word
+            // Перед слово и после него есть хотя бы одна пустая ячейка
             if (direction)
             {
                 if ((startCol > 0 && crossword[startCol - 1, startRow].Style.BackColor == Color.White) ||
@@ -298,12 +298,11 @@ namespace Crossword_Generator
                 FormatCell(row, col, word[i].ToString());
             }
 
-            // Place word number
             int numRow = direction ? startRow : startRow - 1;
             int numCol = direction ? startCol - 1 : startCol;
             if (numRow >= 0 && numCol >= 0 && numRow < crossword.Rows.Count && numCol < crossword.Columns.Count)
             {
-                FormatCell(numRow, numCol, number); // FormatCell now handles placing numbers
+                FormatCell(numRow, numCol, number); 
             }
         }
 
@@ -312,38 +311,38 @@ namespace Crossword_Generator
         {
             DataGridViewCell cell = crossword[col, row];
 
-            // Check if the content is a number (indicating word number)
+            // Проверка, является ли содержимое числом (указывающим номер слова)
             int number;
             bool isNumber = int.TryParse(content, out number);
 
             if (isNumber)
             {
-                // Format for word number
+                // Формат для номера слова
                 cell.Style.BackColor = Color.White;
                 cell.ReadOnly = true;
                 cell.Style.SelectionBackColor = Color.White;
-                cell.Style.ForeColor = Color.Blue; // Set color for word number
+                cell.Style.ForeColor = Color.Blue; // Установка цвета для номера слова
                 cell.Value = content;
             }
             else if (content != null && content.Trim().Length > 0)
             {
-                // Format for letter
+                // Формат для буквы
                 cell.Style.BackColor = Color.White;
                 cell.ReadOnly = false;
                 cell.Style.SelectionBackColor = Color.Cyan;
                 cell.Style.ForeColor = Color.Black;
-                cell.Value = content.ToUpper(); // Ensure letters are uppercase
-                cell.Tag = content.ToUpper(); // Store the correct letter in Tag
+                cell.Value = content.ToUpper();
+                cell.Tag = content.ToUpper();
             }
             else
             {
-                // Clear empty cells
-                cell.Style.BackColor = Color.Black; // Set background to black
-                cell.ReadOnly = false; // Allow editing for empty cells
+                // Очистка пустых ячеек
+                cell.Style.BackColor = Color.Black; // Задний фон черный
+                cell.ReadOnly = false; // Разрешить редактирование пустых ячеек
                 cell.Style.SelectionBackColor = Color.Cyan;
                 cell.Style.ForeColor = Color.Black;
-                cell.Value = null; // Clear cell value
-                cell.Tag = null; // Clear cell tag
+                cell.Value = null;
+                cell.Tag = null;
             }
         }
 
@@ -357,8 +356,8 @@ namespace Crossword_Generator
         {
             if (crossword[e.ColumnIndex, e.RowIndex].Value != null)
             {
-                string inputLetter = crossword[e.ColumnIndex, e.RowIndex].Value.ToString().ToUpper(); // Convert input to uppercase
-                string correctLetter = crossword[e.ColumnIndex, e.RowIndex].Tag.ToString().ToUpper(); // Ensure correct letter is uppercase
+                string inputLetter = crossword[e.ColumnIndex, e.RowIndex].Value.ToString().ToUpper();
+                string correctLetter = crossword[e.ColumnIndex, e.RowIndex].Tag.ToString().ToUpper();
 
                 if (inputLetter == correctLetter)
                 {
@@ -369,10 +368,10 @@ namespace Crossword_Generator
                     crossword[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.Red;
                 }
 
-                crossword[e.ColumnIndex, e.RowIndex].Value = inputLetter; // Update the cell value to uppercase
+                crossword[e.ColumnIndex, e.RowIndex].Value = inputLetter; // Изменение значения ячейки на верхний регистр
             }
 
-            CheckCompletion(); // Check game completion after each cell value change
+            CheckCompletion();
         }
 
         private void CheckCompletion()
@@ -383,7 +382,7 @@ namespace Crossword_Generator
             {
                 foreach (DataGridViewCell cell in row.Cells)
                 {
-                    if (cell.Style.BackColor == Color.White && cell.Tag != null) // Check only white cells with tags
+                    if (cell.Style.BackColor == Color.White && cell.Tag != null)
                     {
                         string inputLetter = cell.Value?.ToString()?.ToUpper();
                         if (inputLetter != cell.Tag.ToString().ToUpper())
@@ -430,8 +429,27 @@ namespace Crossword_Generator
         // [Показать ответы]
         private void ShowAnswers_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Проход по каждой ячейке сетки кроссвордов
+            for (int row = 0; row < crossword.Rows.Count; row++)
+            {
+                for (int col = 0; col < crossword.Columns.Count; col++)
+                {
+                    var cell = crossword[col, row];
+                    if (cell.Style.BackColor == Color.White && cell.Tag != null)
+                    {
+                        // Установка для значения ячейки правильной буквы, сохраненной в свойстве Tag
+                        cell.Value = cell.Tag.ToString();
+                        cell.Style.ForeColor = Color.DarkGreen;
+                    }
+                }
+            }
 
+            MessageBox.Show("Все слова показаны на доске.", "Показать ответы", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+
+
+
 
         // [Руководство пользователя]
         private void UsersGuide_ToolStripMenuItem_Click(object sender, EventArgs e)
