@@ -27,14 +27,34 @@ namespace Crossword_Generator
         // (iconOfExplorer)
         private void iconOfExplorer_Click(object sender, EventArgs e)
         {
-            Process.Start("explorer.exe", Application.StartupPath + $"\\Lists");
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = Application.StartupPath + "Crossword generator\\Lists";
+            openFileDialog.Filter = "Текстовые файлы|*.txt|Все файлы|*.*";
+            DialogResult result = openFileDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                string selectedPath = openFileDialog.FileName;
+
+                if (!(Path.GetExtension(selectedPath).Equals(".txt", StringComparison.OrdinalIgnoreCase)))
+                {
+                    MessageBox.Show("Ошибка! Выберите файл с расширением .txt");
+                    return;
+                }
+
+                this.Hide();
+                CrossGen crossGen = new CrossGen(selectedPath);
+                crossGen.Show();
+            }
         }
+
 
         // [Открыть...]
         public void openButton_Click(object sender, EventArgs e)
         {
             // Инициализируем объект класса OpenFileDialog, задаём фильтр и выбираем путь до файла
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = Application.StartupPath + "Crossword generator\\Lists";
             openFileDialog.Filter = "Текстовые файлы|*.txt|Все файлы|*.*";
             DialogResult result = openFileDialog.ShowDialog();
 

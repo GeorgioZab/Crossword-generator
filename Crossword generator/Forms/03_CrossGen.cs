@@ -53,20 +53,29 @@ namespace Crossword_Generator
         {
             if (File.Exists(listOfWords_file))
             {
-                String line = "";
+                idCells.Clear(); // Clear existing list to start fresh
+
                 using (StreamReader s = new StreamReader(listOfWords_file))
                 {
-                    line = s.ReadLine();
+                    string line;
                     while ((line = s.ReadLine()) != null)
                     {
-                        String[] l = line.Split('|');
-                        idCells.Add(new id_cells(Int32.Parse(l[0]), Int32.Parse(l[1]), l[2], l[3], l[4], l[5]));
+                        string[] parts = line.Split('|');
+                        if (parts.Length >= 2)
+                        {
+                            string word = parts[0].Trim();
+                            string clue = parts[1].Trim();
+                            idCells.Add(new id_cells(0, 0, "", "", word, clue)); // You may adjust X, Y, direction, and number as needed
+                        }
                     }
                 }
             }
             else
+            {
                 MessageBox.Show("Список слов не найден: " + listOfWords_file);
+            }
         }
+
 
 
 
@@ -399,8 +408,6 @@ namespace Crossword_Generator
                 MessageBox.Show("Поздравляем! Вы успешно решили кроссворд!", "Победа", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-
-
         //
         // ВЕРХНЕЕ МЕНЮ
         //
@@ -410,7 +417,7 @@ namespace Crossword_Generator
         {
             this.Hide();
             SelectList selectList = new SelectList();
-            
+
 
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Puzzle Files|*.txt";
