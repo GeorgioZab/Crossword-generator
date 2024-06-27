@@ -65,7 +65,7 @@ namespace Crossword_Generator
                         {
                             string word = parts[0].Trim();
                             string clue = parts[1].Trim();
-                            idCells.Add(new id_cells(0, 0, "", "", word, clue)); 
+                            idCells.Add(new id_cells(0, 0, "", "", word, clue));
                         }
                     }
                 }
@@ -355,7 +355,6 @@ namespace Crossword_Generator
             }
         }
 
-
         private void CrossGen_LocationChanged(object sender, EventArgs e)
         {
             clue_window.SetDesktopLocation(this.Location.X + this.Width + 1, this.Location.Y);
@@ -452,10 +451,6 @@ namespace Crossword_Generator
                 }
             }
         }
-
-
-
-
 
         // [Руководство пользователя]
         private void UsersGuide_ToolStripMenuItem_Click(object sender, EventArgs e)
