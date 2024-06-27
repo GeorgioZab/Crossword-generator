@@ -53,7 +53,7 @@ namespace Crossword_Generator
         {
             if (File.Exists(listOfWords_file))
             {
-                idCells.Clear(); // Clear existing list to start fresh
+                idCells.Clear();
 
                 using (StreamReader s = new StreamReader(listOfWords_file))
                 {
@@ -65,7 +65,7 @@ namespace Crossword_Generator
                         {
                             string word = parts[0].Trim();
                             string clue = parts[1].Trim();
-                            idCells.Add(new id_cells(0, 0, "", "", word, clue)); // You may adjust X, Y, direction, and number as needed
+                            idCells.Add(new id_cells(0, 0, "", "", word, clue)); 
                         }
                     }
                 }
