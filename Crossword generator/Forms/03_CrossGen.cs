@@ -42,8 +42,6 @@ namespace Crossword_Generator
             this.FormClosing += new FormClosingEventHandler(Form_Closing);
         }
 
-
-
         //
         // ОСНОВНЫЕ МЕТОДЫ АЛГОРИТМА СОЗДАНИЯ КРОССВОРДА
         //
@@ -119,7 +117,7 @@ namespace Crossword_Generator
             int wordCount = 0;
             int numbersCount = 0;
 
-            while (wordCount < 7 || numbersCount != wordCount)
+            while (wordCount < 11 || numbersCount != wordCount)
             {
                 crossword.Rows.Clear();
                 crossword.Columns.Clear();
@@ -141,14 +139,14 @@ namespace Crossword_Generator
                     r.Height = crossword.Height / crossword.Rows.Count;
                 }
 
-                idCells = idCells.OrderBy(x => rnd.Next()).ToList();  // Перемешиваем список слов
+                idCells = idCells.OrderBy(x => rnd.Next()).ToList(); // Перемешиваем список слов
                 wordCount = 0;
                 int wordNumber = 1;
 
-                // Размещаем первое слово в центре доски
+                // Размещаем первое слово в правом нижнем углу доски
                 id_cells firstWord = idCells.First();
-                int startRow = crossword.Rows.Count / 2;
-                int startCol = crossword.Columns.Count / 2;
+                int startRow = crossword.Rows.Count - 1;
+                int startCol = crossword.Columns.Count - firstWord.word.Length;
                 bool direction = true; // По умолчанию направление горизонтальное
                 PlaceWord(startRow, startCol, firstWord.word, direction, wordNumber.ToString());
                 clue_window.clue_table.Rows.Add(new String[] { wordNumber.ToString(), "ГОРИЗОНТАЛЬНО", firstWord.clue });
@@ -163,6 +161,7 @@ namespace Crossword_Generator
                 {
                     bool placed = false;
 
+                    // Пробуем разместить новое слово пересечением со всеми ранее размещенными словами
                     foreach (id_cells placedWord in placedWords)
                     {
                         for (int j = 0; j < placedWord.word.Length; j++)
@@ -214,6 +213,8 @@ namespace Crossword_Generator
                 numbersCount = CheckAllNumbersVisible();
             }
         }
+
+
 
         private int CheckAllNumbersVisible()
         {
