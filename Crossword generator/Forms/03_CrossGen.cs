@@ -274,11 +274,17 @@ namespace Crossword_Generator
                         return false;
                     }
                 }
+
+                // Проверка на "ловушки"
+                if (crossword[col, row].Value != null && crossword[col, row].Value.ToString() == "*")
+                {
+                    return false;
+                }
             }
 
             if (!hasIntersection) return false;
 
-            // Перед слово и после него есть хотя бы одна пустая ячейка
+            // Проверка пустых ячеек перед и после слова
             if (direction)
             {
                 if ((startCol > 0 && crossword[startCol - 1, startRow].Style.BackColor == Color.White) ||
@@ -299,9 +305,10 @@ namespace Crossword_Generator
             return true;
         }
 
+
         private void PlaceWord(int startRow, int startCol, string word, bool direction, string number)
         {
-            // Place the word on the board
+            // Размещение слова на доске
             for (int i = 0; i < word.Length; i++)
             {
                 int row = direction ? startRow : startRow + i;
@@ -309,7 +316,7 @@ namespace Crossword_Generator
                 FormatCell(row, col, word[i].ToString());
             }
 
-            // Place the word number at the correct position
+            // Размещение номера слова в нужном месте
             if (direction)
             {
                 if (startCol - 1 >= 0)
@@ -324,14 +331,21 @@ namespace Crossword_Generator
                     FormatCell(startRow - 1, startCol, number);
                 }
             }
-        }
 
+            // Добавление "ловушки" после слова (на одну ячейку дальше)
+            int trapRow = direction ? startRow : startRow + word.Length;
+            int trapCol = direction ? startCol + word.Length : startCol;
+
+            if (trapRow < crossword.Rows.Count && trapCol < crossword.Columns.Count)
+            {
+                FormatCell(trapRow, trapCol, "*"); // "Ловушка"
+            }
+        }
 
         private void FormatCell(int row, int col, string content)
         {
             DataGridViewCell cell = crossword[col, row];
 
-            // Проверка, является ли содержимое числом (указывающим номер слова)
             int number;
             bool isNumber = int.TryParse(content, out number);
 
@@ -344,27 +358,38 @@ namespace Crossword_Generator
                 cell.Style.ForeColor = Color.Blue; // Установка цвета для номера слова
                 cell.Value = content;
             }
-            else if (content != null && content.Trim().Length > 0)
+
+            else if (content == "*")
+            {
+                // Формат для "ловушки"
+                cell.Style.BackColor = Color.Black;
+                cell.ReadOnly = true; 
+                cell.Style.SelectionBackColor = Color.Cyan;
+                cell.Style.ForeColor = Color.Black; 
+                cell.Value = content;
+            }
+            else if (string.IsNullOrEmpty(content))
+            {
+                // Очистка пустых ячеек
+                cell.Style.BackColor = Color.Black;
+                cell.ReadOnly = false;
+                cell.Style.SelectionBackColor = Color.Cyan;
+                cell.Style.ForeColor = Color.Black;
+                cell.Value = null;
+                cell.Tag = null;
+            }
+            else if (content.Trim().Length > 0)
             {
                 // Формат для буквы
-                cell.Style.BackColor = Color.White;
+                cell.Style.BackColor = Color.White; 
                 cell.ReadOnly = false;
                 cell.Style.SelectionBackColor = Color.Cyan;
                 cell.Style.ForeColor = Color.Black;
                 cell.Value = content.ToUpper();
                 cell.Tag = content.ToUpper();
             }
-            else
-            {
-                // Очистка пустых ячеек
-                cell.Style.BackColor = Color.Black; // Задний фон черный
-                cell.ReadOnly = false; // Разрешить редактирование пустых ячеек
-                cell.Style.SelectionBackColor = Color.Cyan;
-                cell.Style.ForeColor = Color.Black;
-                cell.Value = null;
-                cell.Tag = null;
-            }
         }
+
 
         private void CrossGen_LocationChanged(object sender, EventArgs e)
         {
@@ -425,22 +450,31 @@ namespace Crossword_Generator
         // [Открыть список слов]
         private void OpenListOfWords_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            SelectList selectList = new SelectList();
+            String path;
+
+            // Инициализируем объект класса OpenFileDialog, задаём фильтр и выбираем путь до файла
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = Application.StartupPath + "\\Lists";
+            openFileDialog.Filter = "Текстовые файлы|*.txt|Все файлы|*.*";
+            DialogResult result = openFileDialog.ShowDialog();
 
 
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Puzzle Files|*.txt";
-            if (ofd.ShowDialog() == DialogResult.OK)
+            path = openFileDialog.FileName;
+
+
+            // Если путь успешно выбран
+            if (result == DialogResult.OK)
             {
-                listOfWords_file = ofd.FileName;
+                // Проверка на тип файла
+                if (!(Path.GetExtension(path).Equals(".txt")))
+                {
+                    MessageBox.Show("Ошибка! Выберите файл с расширением .txt");
+                    return;
+                }
 
-                crossword.Rows.Clear();
-                clue_window.clue_table.Rows.Clear();
-                idCells.Clear();
-
-                BuildWordList();
-                InitBoard();
+                this.Hide();
+                CrossGen crossGen = new CrossGen(path);
+                crossGen.Show();
             }
         }
 
